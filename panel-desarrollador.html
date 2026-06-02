@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Panel - Red Canje m²</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --naranja:#FF6B1A;--naranja2:#FF8C42;--azul:#1A2E4A;--azul2:#0F4C81;
+  --verde:#27AE60;--gris:#F4F6FA;--borde:#E2E8F0;--texto:#2D3748;--sub:#718096;
+}
+body{font-family:'Open Sans',sans-serif;background:var(--gris);color:var(--texto);display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--azul);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;}
+.sidebar-logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sidebar-logo .logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;color:#fff;}
+.sidebar-logo .logo span{color:var(--naranja);}
+.sidebar-logo .badge{background:rgba(255,107,26,0.2);color:var(--naranja);font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:10px;margin-top:6px;display:inline-block;}
+.sidebar-user{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px;}
+.avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--naranja),var(--naranja2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;color:#fff;font-size:.9rem;flex-shrink:0;}
+.user-info .name{color:#fff;font-size:.85rem;font-weight:600;}
+.user-info .type{color:#7fa3c0;font-size:.75rem;}
+nav.sidebar-nav{padding:16px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#9bb5cc;font-size:.88rem;font-weight:600;cursor:pointer;transition:.2s;border-left:3px solid transparent;position:relative;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,0.05);}
+.nav-item.active{color:#fff;background:rgba(255,107,26,0.15);border-left-color:var(--naranja);}
+.nav-item .icon{font-size:1.1rem;width:20px;text-align:center;}
+.nav-badge{background:var(--naranja);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:auto;}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);}
+.sidebar-footer .nav-item{padding:10px 0;border-left:none;}
+
+/* MAIN */
+.main{margin-left:230px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:#fff;padding:16px 32px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;}
+.topbar h1{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.15rem;color:var(--azul);}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.notif-btn{position:relative;background:var(--gris);border:none;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--naranja);border-radius:50%;}
+.profile-btn{display:flex;align-items:center;gap:8px;background:var(--gris);border:none;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--azul);}
+
+/* CONTENT */
+.content{padding:28px 32px;flex:1;}
+
+/* CARDS STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px;}
+.stat-card{background:#fff;border-radius:14px;padding:22px 20px;border:1px solid var(--borde);display:flex;align-items:center;gap:16px;}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.stat-icon.orange{background:rgba(255,107,26,0.12);}
+.stat-icon.blue{background:rgba(15,76,129,0.1);}
+.stat-icon.green{background:rgba(39,174,96,0.1);}
+.stat-icon.purple{background:rgba(142,68,173,0.1);}
+.stat-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.6rem;color:var(--azul);line-height:1;}
+.stat-label{color:var(--sub);font-size:.78rem;margin-top:4px;}
+
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* SECTION HEADER */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.sec-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.05rem;color:var(--azul);}
+.btn-sm{padding:8px 18px;border-radius:20px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;border:none;transition:.2s;}
+.btn-orange{background:var(--naranja);color:#fff;}
+.btn-orange:hover{background:var(--naranja2);}
+.btn-ghost{background:transparent;color:var(--sub);border:1px solid var(--borde);}
+.btn-ghost:hover{border-color:var(--naranja);color:var(--naranja);}
+
+/* SEARCH BAR */
+.search-bar{background:#fff;border:1px solid var(--borde);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.search-bar input{border:none;outline:none;flex:1;font-size:.9rem;font-family:'Open Sans',sans-serif;color:var(--texto);}
+.search-bar .filter-tabs{display:flex;gap:8px;margin-left:auto;}
+.ftab{padding:6px 14px;border-radius:16px;font-size:.78rem;font-weight:700;cursor:pointer;border:none;background:var(--gris);color:var(--sub);transition:.2s;}
+.ftab.active{background:var(--azul);color:#fff;}
+
+/* COMPANY CARDS */
+.companies-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.company-card{background:#fff;border-radius:14px;padding:20px;border:1px solid var(--borde);transition:.2s;}
+.company-card:hover{border-color:var(--naranja);box-shadow:0 4px 20px rgba(255,107,26,0.1);}
+.cc-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.cc-avatar{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;flex-shrink:0;}
+.cc-avatar.dev{background:linear-gradient(135deg,var(--azul),var(--azul2));}
+.cc-avatar.prov{background:linear-gradient(135deg,#c0392b,var(--naranja));}
+.cc-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.95rem;color:var(--azul);}
+.cc-type{font-size:.75rem;color:var(--sub);margin-top:2px;}
+.cc-tag{display:inline-block;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700;margin-left:auto;}
+.cc-tag.dev{background:rgba(15,76,129,0.1);color:var(--azul2);}
+.cc-tag.prov{background:rgba(255,107,26,0.1);color:var(--naranja);}
+.cc-detail{font-size:.83rem;color:var(--sub);line-height:1.6;margin-bottom:14px;}
+.cc-footer{display:flex;align-items:center;justify-content:space-between;}
+.cc-location{font-size:.78rem;color:var(--sub);}
+.cc-location span{margin-right:4px;}
+.connect-btn{padding:7px 16px;background:var(--naranja);color:#fff;border:none;border-radius:16px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.2s;}
+.connect-btn:hover{background:var(--naranja2);}
+.connect-btn.sent{background:var(--gris);color:var(--sub);cursor:default;}
+
+/* OPORTUNIDADES */
+.oport-list{display:flex;flex-direction:column;gap:14px;}
+.oport-card{background:#fff;border-radius:14px;padding:22px;border:1px solid var(--borde);display:flex;align-items:flex-start;gap:18px;transition:.2s;}
+.oport-card:hover{border-color:var(--naranja);box-shadow:0 4px 20px rgba(255,107,26,0.08);}
+.oport-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.oport-body{flex:1;}
+.oport-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;color:var(--azul);margin-bottom:4px;}
+.oport-company{font-size:.82rem;color:var(--sub);margin-bottom:10px;}
+.oport-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.otag{background:var(--gris);color:var(--texto);font-size:.75rem;padding:4px 10px;border-radius:8px;font-weight:600;}
+.otag.highlight{background:rgba(255,107,26,0.1);color:var(--naranja);}
+.oport-meta{display:flex;gap:20px;font-size:.8rem;color:var(--sub);}
+.oport-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.oport-value{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--verde);}
+.oport-value span{font-size:.75rem;font-weight:600;color:var(--sub);display:block;text-align:right;}
+
+/* MENSAJES */
+.msg-layout{display:grid;grid-template-columns:280px 1fr;gap:0;background:#fff;border-radius:14px;border:1px solid var(--borde);overflow:hidden;height:520px;}
+.msg-sidebar{border-right:1px solid var(--borde);display:flex;flex-direction:column;}
+.msg-sidebar-header{padding:16px;border-bottom:1px solid var(--borde);font-family:'Montserrat',sans-serif;font-weight:700;font-size:.9rem;color:var(--azul);}
+.msg-list{overflow-y:auto;flex:1;}
+.msg-item{padding:14px 16px;border-bottom:1px solid var(--borde);cursor:pointer;transition:.2s;display:flex;gap:10px;align-items:flex-start;}
+.msg-item:hover{background:var(--gris);}
+.msg-item.active{background:rgba(255,107,26,0.06);border-left:3px solid var(--naranja);}
+.msg-item.unread .msg-from{font-weight:700;color:var(--azul);}
+.msg-av{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff;flex-shrink:0;}
+.msg-av.dev{background:linear-gradient(135deg,var(--azul),var(--azul2));}
+.msg-av.prov{background:linear-gradient(135deg,#c0392b,var(--naranja));}
+.msg-from{font-size:.85rem;color:var(--texto);}
+.msg-preview{font-size:.78rem;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;}
+.msg-time{font-size:.7rem;color:var(--sub);margin-left:auto;white-space:nowrap;}
+.unread-dot{width:8px;height:8px;background:var(--naranja);border-radius:50%;margin-top:5px;flex-shrink:0;}
+.msg-main{display:flex;flex-direction:column;}
+.msg-topbar{padding:16px 20px;border-bottom:1px solid var(--borde);display:flex;align-items:center;gap:12px;}
+.msg-topbar .name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.95rem;color:var(--azul);}
+.msg-topbar .detail{font-size:.78rem;color:var(--sub);}
+.msg-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;}
+.bubble{max-width:70%;padding:12px 16px;border-radius:14px;font-size:.86rem;line-height:1.6;}
+.bubble.received{background:var(--gris);border-bottom-left-radius:4px;align-self:flex-start;}
+.bubble.sent{background:var(--naranja);color:#fff;border-bottom-right-radius:4px;align-self:flex-end;}
+.bubble-time{font-size:.7rem;color:var(--sub);margin-top:4px;}
+.bubble-time.sent{text-align:right;color:rgba(255,255,255,0.7);}
+.msg-input-area{padding:14px 16px;border-top:1px solid var(--borde);display:flex;gap:10px;}
+.msg-input{flex:1;border:1px solid var(--borde);border-radius:20px;padding:10px 16px;font-size:.88rem;outline:none;font-family:'Open Sans',sans-serif;}
+.msg-input:focus{border-color:var(--naranja);}
+.send-btn{background:var(--naranja);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+
+/* PERFIL */
+.perfil-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.perfil-card{background:#fff;border-radius:14px;padding:28px;border:1px solid var(--borde);}
+.perfil-card.full{grid-column:1/-1;}
+.perfil-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.perfil-avatar{width:64px;height:64px;background:linear-gradient(135deg,var(--azul),var(--azul2));border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:#fff;}
+.perfil-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--azul);}
+.perfil-type{font-size:.82rem;color:var(--sub);margin-top:4px;}
+.perfil-verified{background:rgba(39,174,96,0.1);color:var(--verde);font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:10px;margin-top:6px;display:inline-block;}
+.field-group{margin-bottom:16px;}
+.field-label{font-size:.78rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.field-value{font-size:.92rem;color:var(--texto);}
+.field-input{width:100%;border:1px solid var(--borde);border-radius:8px;padding:10px 14px;font-size:.9rem;font-family:'Open Sans',sans-serif;outline:none;color:var(--texto);}
+.field-input:focus{border-color:var(--naranja);}
+.divider{border:none;border-top:1px solid var(--borde);margin:20px 0;}
+.completeness{background:var(--gris);border-radius:10px;padding:16px;}
+.comp-label{font-size:.82rem;font-weight:700;color:var(--azul);margin-bottom:10px;display:flex;justify-content:space-between;}
+.comp-bar{background:#e2e8f0;border-radius:10px;height:8px;overflow:hidden;}
+.comp-fill{height:100%;background:linear-gradient(90deg,var(--naranja),var(--naranja2));border-radius:10px;width:75%;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo">Red<span>Canje</span>m²</div>
+    <div class="badge">Panel de Empresa</div>
+  </div>
+  <div class="sidebar-user">
+    <div class="avatar">GC</div>
+    <div class="user-info">
+      <div class="name">Grupo Construir</div>
+      <div class="type">🏢 Desarrollador</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="showPanel('inicio',this)"><span class="icon">🏠</span> Inicio</div>
+    <div class="nav-item" onclick="showPanel('directorio',this)"><span class="icon">🏢</span> Directorio</div>
+    <div class="nav-item" onclick="showPanel('oportunidades',this)"><span class="icon">💼</span> Oportunidades</div>
+    <div class="nav-item" onclick="showPanel('mensajes',this)"><span class="icon">💬</span> Mensajes <span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="showPanel('perfil',this)"><span class="icon">👤</span> Mi Perfil</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="nav-item" style="color:#9bb5cc;font-size:.85rem;padding:10px 0;cursor:default;border:none;"><span class="icon">⚙️</span> Configuración</div>
+    <div class="nav-item" style="color:#9bb5cc;font-size:.85rem;padding:10px 0;cursor:default;border:none;"><span class="icon">🚪</span> Cerrar sesión</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <h1 id="topbar-title">Inicio — Bienvenido, Grupo Construir</h1>
+    <div class="topbar-right">
+      <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+      <button class="profile-btn">GC &nbsp;▾</button>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- INICIO -->
+    <div class="panel active" id="panel-inicio">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon orange">🤝</div>
+          <div><div class="stat-val">48</div><div class="stat-label">Empresas en la Red</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">💼</div>
+          <div><div class="stat-val">12</div><div class="stat-label">Oportunidades activas</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">✅</div>
+          <div><div class="stat-val">3</div><div class="stat-label">Conexiones realizadas</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple">💬</div>
+          <div><div class="stat-val">3</div><div class="stat-label">Mensajes nuevos</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div style="background:#fff;border-radius:14px;padding:24px;border:1px solid var(--borde);">
+          <div class="sec-header"><div class="sec-title">⚡ Actividad reciente</div></div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;background:rgba(255,107,26,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">🔔</div>
+              <div><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Solicitud de conexión recibida</div><div style="font-size:.78rem;color:var(--sub);margin-top:2px;">Materiales del Norte SA quiere conectar con vos</div><div style="font-size:.72rem;color:#a0aec0;margin-top:3px;">Hace 2 horas</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;background:rgba(39,174,96,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✅</div>
+              <div><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Conexión aceptada</div><div style="font-size:.78rem;color:var(--sub);margin-top:2px;">Cerramientos Patagonia aceptó tu solicitud</div><div style="font-size:.72rem;color:#a0aec0;margin-top:3px;">Ayer</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;background:rgba(15,76,129,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">💼</div>
+              <div><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Nueva oportunidad publicada</div><div style="font-size:.78rem;color:var(--sub);margin-top:2px;">Proyecto Rosario Norte — 24 unidades disponibles</div><div style="font-size:.72rem;color:#a0aec0;margin-top:3px;">Hace 3 días</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="width:36px;height:36px;background:rgba(142,68,173,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">💬</div>
+              <div><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Mensaje nuevo</div><div style="font-size:.78rem;color:var(--sub);margin-top:2px;">Hormigones del Plata te envió un mensaje</div><div style="font-size:.72rem;color:#a0aec0;margin-top:3px;">Hace 4 días</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:14px;padding:24px;border:1px solid var(--borde);">
+          <div class="sec-header"><div class="sec-title">🔥 Proveedores sugeridos</div><button class="btn-sm btn-ghost" onclick="showPanel('directorio',document.querySelectorAll('.nav-item')[1])">Ver todos</button></div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gris);border-radius:10px;">
+              <div class="cc-avatar prov" style="width:40px;height:40px;font-size:.85rem;border-radius:10px;">MP</div>
+              <div style="flex:1;"><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Materiales del Norte SA</div><div style="font-size:.75rem;color:var(--sub);">Materiales de construcción · CABA</div></div>
+              <button class="connect-btn" style="font-size:.72rem;padding:6px 12px;">Conectar</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gris);border-radius:10px;">
+              <div class="cc-avatar prov" style="width:40px;height:40px;font-size:.85rem;border-radius:10px;">CP</div>
+              <div style="flex:1;"><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Cerramientos Patagonia</div><div style="font-size:.75rem;color:var(--sub);">Aberturas y carpintería · GBA Sur</div></div>
+              <button class="connect-btn sent" style="font-size:.72rem;padding:6px 12px;">Enviada ✓</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--gris);border-radius:10px;">
+              <div class="cc-avatar prov" style="width:40px;height:40px;font-size:.85rem;border-radius:10px;">HP</div>
+              <div style="flex:1;"><div style="font-size:.88rem;font-weight:600;color:var(--azul);">Hormigones del Plata</div><div style="font-size:.75rem;color:var(--sub);">Hormigón elaborado · Gran Rosario</div></div>
+              <button class="connect-btn" style="font-size:.72rem;padding:6px 12px;">Conectar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIRECTORIO -->
+    <div class="panel" id="panel-directorio">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Buscar empresa, rubro, zona..."/>
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="filterTab(this)">Todos</button>
+          <button class="ftab" onclick="filterTab(this)">Desarrolladores</button>
+          <button class="ftab" onclick="filterTab(this)">Proveedores</button>
+        </div>
+      </div>
+      <div class="companies-grid">
+        <div class="company-card">
+          <div class="cc-header"><div class="cc-avatar prov">MN</div><div><div class="cc-name">Materiales del Norte SA</div><div class="cc-type">Distribuidora de materiales</div></div><span class="cc-tag prov">Proveedor</span></div>
+          <div class="cc-detail">Distribución de materiales de construcción en CABA y GBA. Más de 15 años en el mercado. Abiertos a canje por m² en proyectos residenciales.</div>
+          <div class="cc-footer"><div class="cc-location"><span>📍</span>CABA</div><button class="connect-btn">Solicitar conexión</button></div>
+        </div>
+        <div class="company-card">
+          <div class="cc-header"><div class="cc-avatar dev">VR</div><div><div class="cc-name">Vértice Real Estate</div><div class="cc-type">Desarrolladora inmobiliaria</div></div><span class="cc-tag dev">Desarrollador</span></div>
+          <div class="cc-detail">Proyectos residenciales de mediana escala en GBA Norte. Buscamos proveedores de cerramientos, revestimientos y sanitarios para canje.</div>
+          <div class="cc-footer"><div class="cc-location"><span>📍</span>GBA Norte</div><button class="connect-btn">Solicitar conexión</button></div>
+        </div>
+        <div class="company-card">
+          <div class="cc-header"><div class="cc-avatar prov">CP</div><div><div class="cc-name">Cerramientos Patagonia</div><div class="cc-type">Fabricante de aberturas</div></div><span class="cc-tag prov">Proveedor</span></div>
+          <div class="cc-detail">Fabricación e instalación de aberturas de aluminio y PVC. Capacidad para equipar proyectos de hasta 100 unidades. Experiencia en canjes.</div>
+          <div class="cc-footer"><div class="cc-location"><span>📍</span>GBA Sur</div><button class="connect-btn sent">Solicitud enviada ✓</button></div>
+        </div>
+        <div class="company-card">
+          <div class="cc-header"><div class="cc-avatar dev">PA</div><div><div class="cc-name">Proyectos Andina SRL</div><div class="cc-type">Desarrolladora inmobiliaria</div></div><span class="cc-tag dev">Desarrollador</span></div>
+          <div class="cc-detail">Especialistas en countries y barrios privados en zona norte. Proyectos de 30 a 150 lotes. Buscamos proveedores de infraestructura.</div>
+          <div class="cc-footer"><div class="cc-location"><span>📍</span>Pilar / Escobar</div><button class="connect-btn">Solicitar conexión</button></div>
+        </div>
+        <div class="company-card">
+          <div class="cc-header"><div class="cc-avatar prov">HP</div><div><div class="cc-name">Hormigones del Plata</div><div class="cc-type">Fabricante de hormigón</div></div><span class="cc-tag prov">Proveedor</span></div>
+          <div class="cc-detail">Producción y entrega de hormigón elaborado en gran Rosario y alrededores. Interesados en participar en proyectos por canje de unidades.</div>
+          <div class="cc-footer"><div class="cc-location"><span>📍</span>Rosario</div><button class="connect-btn">Solicitar conexión</button></div>
+        </div>
+        <div class="company-card">
+          <div class="cc-header"><div class="cc-avatar prov">RE</div><div><div class="cc-name">Revestimientos El Sol</div><div class="cc-type">Distribuidora de cerámicos</div></div><span class="cc-tag prov">Proveedor</span></div>
+          <div class="cc-detail">Distribución de cerámicos, porcellanatos y revestimientos premium. Stock permanente. Experiencia en acuerdos de canje con desarrolladoras.</div>
+          <div class="cc-footer"><div class="cc-location"><span>📍</span>Córdoba</div><button class="connect-btn">Solicitar conexión</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPORTUNIDADES -->
+    <div class="panel" id="panel-oportunidades">
+      <div class="sec-header">
+        <div><div class="sec-title">Oportunidades de canje activas</div><div style="font-size:.82rem;color:var(--sub);margin-top:4px;">Proyectos que buscan proveedores dispuestos a trabajar por m²</div></div>
+        <button class="btn-sm btn-orange">+ Publicar oportunidad</button>
+      </div>
+      <div class="oport-list">
+        <div class="oport-card">
+          <div class="oport-icon">🏙️</div>
+          <div class="oport-body">
+            <div class="oport-title">Torre Belgrano — 18 pisos, 54 unidades</div>
+            <div class="oport-company">Grupo Inversor Norte · CABA, Belgrano</div>
+            <div class="oport-tags">
+              <span class="otag">Materiales estructurales</span>
+              <span class="otag">Sanitarios</span>
+              <span class="otag highlight">Canje disponible: 3 unidades</span>
+            </div>
+            <div class="oport-meta"><span>📅 Inicio: Mar 2025</span><span>⏳ Cierre de acuerdo: 30 días</span><span>📍 CABA</span></div>
+          </div>
+          <div class="oport-actions">
+            <div class="oport-value">3 m²<span>en canje</span></div>
+            <button class="connect-btn">Ver detalle</button>
+          </div>
+        </div>
+        <div class="oport-card">
+          <div class="oport-icon">🏘️</div>
+          <div class="oport-body">
+            <div class="oport-title">Barrio Rosario Norte — 24 lotes</div>
+            <div class="oport-company">Proyectos Andina SRL · Gran Rosario</div>
+            <div class="oport-tags">
+              <span class="otag">Cerramientos</span>
+              <span class="otag">Revestimientos</span>
+              <span class="otag">Electricidad</span>
+              <span class="otag highlight">Canje: 2 lotes</span>
+            </div>
+            <div class="oport-meta"><span>📅 Inicio: Abr 2025</span><span>⏳ Cierre: 45 días</span><span>📍 Rosario</span></div>
+          </div>
+          <div class="oport-actions">
+            <div class="oport-value">2 lotes<span>en canje</span></div>
+            <button class="connect-btn">Ver detalle</button>
+          </div>
+        </div>
+        <div class="oport-card">
+          <div class="oport-icon">🏢</div>
+          <div class="oport-body">
+            <div class="oport-title">Edificio Palermo Soho — 12 unidades</div>
+            <div class="oport-company">Vértice Real Estate · CABA, Palermo</div>
+            <div class="oport-tags">
+              <span class="otag">Hormigón</span>
+              <span class="otag">Aberturas</span>
+              <span class="otag highlight">Canje: 1 unidad</span>
+            </div>
+            <div class="oport-meta"><span>📅 Inicio: Jun 2025</span><span>⏳ Cierre: 60 días</span><span>📍 CABA</span></div>
+          </div>
+          <div class="oport-actions">
+            <div class="oport-value">1 unidad<span>en canje</span></div>
+            <button class="connect-btn">Ver detalle</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENSAJES -->
+    <div class="panel" id="panel-mensajes">
+      <div class="msg-layout">
+        <div class="msg-sidebar">
+          <div class="msg-sidebar-header">💬 Mensajes</div>
+          <div class="msg-list">
+            <div class="msg-item active unread" onclick="selectMsg(this,'Materiales del Norte SA','MN','prov')">
+              <div class="msg-av prov">MN</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;"><span class="msg-from">Materiales del Norte</span><span class="msg-time">10:24</span></div>
+                <div class="msg-preview">Hola! Vimos tu proyecto y nos interesa...</div>
+              </div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="msg-item unread" onclick="selectMsg(this,'Cerramientos Patagonia','CP','prov')">
+              <div class="msg-av prov">CP</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;"><span class="msg-from">Cerramientos Patagonia</span><span class="msg-time">Ayer</span></div>
+                <div class="msg-preview">Podemos cubrir todo el edificio con...</div>
+              </div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="msg-item" onclick="selectMsg(this,'Hormigones del Plata','HP','prov')">
+              <div class="msg-av prov">HP</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;"><span class="msg-from">Hormigones del Plata</span><span class="msg-time">Mar 12</span></div>
+                <div class="msg-preview">Quedamos para el lunes entonces</div>
+              </div>
+            </div>
+            <div class="msg-item unread" onclick="selectMsg(this,'Vértice Real Estate','VR','dev')">
+              <div class="msg-av dev">VR</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;"><span class="msg-from">Vértice Real Estate</span><span class="msg-time">Mar 10</span></div>
+                <div class="msg-preview">¿Tienen disponibilidad para el Q2?</div>
+              </div>
+              <div class="unread-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="msg-main">
+          <div class="msg-topbar">
+            <div class="msg-av prov" id="chat-av" style="width:40px;height:40px;font-size:.9rem;border-radius:10px;">MN</div>
+            <div><div class="name" id="chat-name">Materiales del Norte SA</div><div class="detail">Proveedor · CABA</div></div>
+          </div>
+          <div class="msg-body" id="chat-body">
+            <div class="bubble received">Hola! Vimos su proyecto Torre Belgrano en la plataforma y nos interesa mucho explorar un acuerdo de canje.<div class="bubble-time">10:20</div></div>
+            <div class="bubble sent">Hola! Gracias por contactarse. El proyecto está en etapa de cierre de acuerdos con proveedores. ¿Qué tipo de materiales ofrecen?<div class="bubble-time sent">10:22</div></div>
+            <div class="bubble received">Somos distribuidores de materiales estructurales y de terminación. Podemos proveer desde hierro y cemento hasta revestimientos. Estamos familiarizados con el modelo de canje por m².<div class="bubble-time">10:24</div></div>
+          </div>
+          <div class="msg-input-area">
+            <input class="msg-input" id="msg-input" type="text" placeholder="Escribí un mensaje..."/>
+            <button class="send-btn" onclick="sendMsg()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="panel" id="panel-perfil">
+      <div class="perfil-grid">
+        <div class="perfil-card full">
+          <div class="perfil-header">
+            <div class="perfil-avatar">GC</div>
+            <div>
+              <div class="perfil-name">Grupo Construir SA</div>
+              <div class="perfil-type">🏢 Desarrollador inmobiliario</div>
+              <div class="perfil-verified">✓ Perfil verificado</div>
+            </div>
+            <button class="btn-sm btn-orange" style="margin-left:auto;">Guardar cambios</button>
+          </div>
+          <div class="completeness">
+            <div class="comp-label"><span>Completitud del perfil</span><span style="color:var(--naranja);">75%</span></div>
+            <div class="comp-bar"><div class="comp-fill"></div></div>
+          </div>
+        </div>
+        <div class="perfil-card">
+          <div class="sec-title" style="margin-bottom:20px;">Información de la empresa</div>
+          <div class="field-group"><div class="field-label">Razón social</div><input class="field-input" value="Grupo Construir SA"/></div>
+          <div class="field-group"><div class="field-label">CUIT</div><input class="field-input" value="30-71234567-8"/></div>
+          <div class="field-group"><div class="field-label">Sitio web</div><input class="field-input" value="www.grupoconstruir.com.ar"/></div>
+          <div class="field-group"><div class="field-label">Zona de operación</div><input class="field-input" value="CABA y GBA Norte"/></div>
+        </div>
+        <div class="perfil-card">
+          <div class="sec-title" style="margin-bottom:20px;">Contacto</div>
+          <div class="field-group"><div class="field-label">Nombre del responsable</div><input class="field-input" value="Martín García"/></div>
+          <div class="field-group"><div class="field-label">Email</div><input class="field-input" value="mgarcia@grupoconstruir.com.ar"/></div>
+          <div class="field-group"><div class="field-label">WhatsApp</div><input class="field-input" value="+54 9 11 4567-8901"/></div>
+          <div class="field-group"><div class="field-label">Cargo</div><input class="field-input" value="Gerente de Proyectos"/></div>
+        </div>
+        <div class="perfil-card full">
+          <div class="sec-title" style="margin-bottom:16px;">Descripción de la empresa</div>
+          <textarea class="field-input" rows="4" style="resize:vertical;">Desarrolladora inmobiliaria con más de 10 años de experiencia en proyectos residenciales en CABA y GBA Norte. Especialistas en edificios de mediana escala. Abiertos a trabajar con proveedores en esquemas de canje por m².</textarea>
+          <div style="margin-top:20px;"><div class="sec-title" style="margin-bottom:14px;">Tipo de proyectos</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span style="background:rgba(15,76,129,0.1);color:var(--azul2);padding:6px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">🏢 Residencial edificios</span>
+            <span style="background:rgba(15,76,129,0.1);color:var(--azul2);padding:6px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">🏘️ PH / Casas</span>
+            <span style="background:var(--gris);color:var(--sub);padding:6px 14px;border-radius:20px;font-size:.82rem;font-weight:600;">+ Agregar</span>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const titles = {inicio:'Inicio — Bienvenido, Grupo Construir',directorio:'Directorio de Empresas',oportunidades:'Oportunidades de Canje',mensajes:'Mensajes',perfil:'Mi Perfil'};
+
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('topbar-title').textContent = titles[id];
+}
+
+function filterTab(el) {
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectMsg(el, name, initials, type) {
+  document.querySelectorAll('.msg-item').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+  el.querySelector('.unread-dot') && el.querySelector('.unread-dot').remove();
+  el.querySelector('.msg-from').style.fontWeight = '400';
+  document.getElementById('chat-name').textContent = name;
+  const av = document.getElementById('chat-av');
+  av.textContent = initials;
+  av.className = 'msg-av ' + type;
+}
+
+function sendMsg() {
+  const inp = document.getElementById('msg-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  const body = document.getElementById('chat-body');
+  const div = document.createElement('div');
+  div.className = 'bubble sent';
+  const now = new Date();
+  div.innerHTML = text + '<div class="bubble-time sent">' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0') + '</div>';
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+  inp.value = '';
+}
+
+document.getElementById('msg-input').addEventListener('keydown', e => { if(e.key === 'Enter') sendMsg(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Red Canje m2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --naranja:#FF6B1A;--naranja2:#FF8C42;--azul:#1A2E4A;--azul2:#0F4C81;
+    --verde:#2ECC71;--gris:#F5F7FA;--texto:#2D3748;
+  }
+  html{scroll-behavior:smooth;}
+  body{font-family:'Open Sans',sans-serif;color:var(--texto);overflow-x:hidden;}
+  nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(26,46,74,0.97);padding:14px 40px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 20px rgba(0,0,0,0.3);}
+  .logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:#fff;letter-spacing:1px;}
+  .logo span{color:var(--naranja);}
+  nav ul{list-style:none;display:flex;gap:28px;}
+  nav ul li a{color:#ccc;text-decoration:none;font-size:.9rem;font-weight:600;transition:.2s;}
+  nav ul li a:hover{color:var(--naranja);}
+  .nav-cta{background:var(--naranja);color:#fff!important;padding:8px 20px;border-radius:25px;}
+  .hero{min-height:100vh;background:linear-gradient(135deg,var(--azul) 0%,var(--azul2) 50%,#1a4a6e 100%);display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 20px 60px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+  .hero-badge{background:rgba(255,107,26,0.2);border:1px solid var(--naranja);color:var(--naranja);padding:6px 18px;border-radius:20px;font-size:.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;display:inline-block;margin-bottom:24px;}
+  .hero h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(2.2rem,5vw,4rem);color:#fff;line-height:1.15;margin-bottom:20px;}
+  .hero h1 span{color:var(--naranja);}
+  .hero p{font-size:clamp(1rem,2vw,1.2rem);color:#b0c4de;max-width:650px;margin:0 auto 40px;line-height:1.7;}
+  .hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn{padding:16px 36px;border-radius:30px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;border:none;text-decoration:none;transition:.3s;display:inline-block;}
+  .btn-primary{background:var(--naranja);color:#fff;box-shadow:0 4px 20px rgba(255,107,26,0.4);}
+  .btn-primary:hover{background:var(--naranja2);transform:translateY(-2px);}
+  .btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.4);}
+  .btn-outline:hover{background:rgba(255,255,255,0.1);border-color:#fff;transform:translateY(-2px);}
+  .hero-stats{display:flex;gap:40px;justify-content:center;margin-top:60px;flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:var(--naranja);}
+  .stat-label{color:#7fa3c0;font-size:.85rem;margin-top:4px;}
+  section{padding:80px 20px;}
+  .container{max-width:1100px;margin:0 auto;}
+  .section-tag{color:var(--naranja);font-weight:700;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+  .section-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.8rem,3vw,2.6rem);color:var(--azul);margin-bottom:16px;line-height:1.2;}
+  .section-sub{color:#718096;font-size:1.05rem;max-width:600px;line-height:1.7;}
+  .como{background:var(--gris);}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px;margin-top:50px;}
+  .step{background:#fff;border-radius:16px;padding:36px 28px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.07);transition:.3s;position:relative;overflow:hidden;}
+  .step::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--naranja),var(--naranja2));}
+  .step:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(0,0,0,0.12);}
+  .step-num{width:56px;height:56px;background:linear-gradient(135deg,var(--naranja),var(--naranja2));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;color:#fff;}
+  .step h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.15rem;color:var(--azul);margin-bottom:12px;}
+  .step p{color:#718096;font-size:.93rem;line-height:1.6;}
+  .beneficios-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:50px;}
+  @media(max-width:700px){.beneficios-grid{grid-template-columns:1fr;}}
+  .benef-card{border-radius:20px;padding:40px 36px;color:#fff;}
+  .benef-card.dev{background:linear-gradient(135deg,var(--azul),var(--azul2));}
+  .benef-card.prov{background:linear-gradient(135deg,#c0392b,var(--naranja));}
+  .benef-card h3{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;margin-bottom:8px;}
+  .benef-card .subtitle{opacity:.8;font-size:.9rem;margin-bottom:28px;}
+  .benef-list{list-style:none;}
+  .benef-list li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.15);display:flex;align-items:flex-start;gap:12px;font-size:.95rem;line-height:1.5;}
+  .benef-list li:last-child{border-bottom:none;}
+  .benef-list li::before{content:'✓';background:rgba(255,255,255,0.2);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+  .ejemplo{background:var(--gris);}
+  .ejemplo-box{background:#fff;border-radius:20px;padding:50px;box-shadow:0 8px 40px rgba(0,0,0,0.08);margin-top:40px;display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;}
+  @media(max-width:700px){.ejemplo-box{grid-template-columns:1fr;text-align:center;}}
+  .actor{text-align:center;padding:20px;}
+  .actor-icon{font-size:3rem;margin-bottom:12px;}
+  .actor-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--azul);margin-bottom:8px;}
+  .actor-desc{color:#718096;font-size:.9rem;line-height:1.6;}
+  .swap-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--naranja),var(--naranja2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 10px;box-shadow:0 4px 20px rgba(255,107,26,0.3);}
+  .swap-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.85rem;color:var(--naranja);text-transform:uppercase;letter-spacing:1px;}
+  .porque{background:linear-gradient(135deg,var(--azul),var(--azul2));color:#fff;}
+  .porque .section-title{color:#fff;}
+  .porque .section-sub{color:#b0c4de;}
+  .numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin-top:50px;}
+  .numero{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:32px 20px;text-align:center;}
+  .numero-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.4rem;color:var(--naranja);margin-bottom:8px;}
+  .numero-label{color:#b0c4de;font-size:.9rem;line-height:1.5;}
+  .registro{background:var(--gris);}
+  .form-container{background:#fff;border-radius:20px;padding:50px;box-shadow:0 8px 40px rgba(0,0,0,0.08);max-width:600px;margin:40px auto 0;}
+  .tabs{display:flex;gap:10px;margin-bottom:30px;background:#f0f4f8;padding:6px;border-radius:30px;}
+  .tab{flex:1;padding:12px;border:none;background:transparent;border-radius:25px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:.3s;color:#718096;}
+  .tab.active{background:var(--naranja);color:#fff;box-shadow:0 3px 12px rgba(255,107,26,0.3);}
+  .form-group{margin-bottom:20px;}
+  .form-group label{display:block;font-weight:600;font-size:.9rem;color:var(--azul);margin-bottom:8px;}
+  .form-group input,.form-group select{width:100%;padding:14px 18px;border:2px solid #e2e8f0;border-radius:10px;font-size:.95rem;font-family:'Open Sans',sans-serif;transition:.2s;outline:none;color:var(--texto);}
+  .form-group input:focus,.form-group select:focus{border-color:var(--naranja);}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:500px){.form-grid{grid-template-columns:1fr;}}
+  .submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--naranja),var(--naranja2));color:#fff;border:none;border-radius:30px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:.3s;margin-top:10px;}
+  .submit-btn:hover{transform:translateY(-2px);}
+  .form-note{text-align:center;color:#a0aec0;font-size:.82rem;margin-top:14px;}
+  footer{background:var(--azul);color:#b0c4de;padding:50px 20px 30px;text-align:center;}
+  .footer-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.8rem;color:#fff;margin-bottom:12px;}
+  .footer-logo span{color:var(--naranja);}
+  .footer-desc{max-width:450px;margin:0 auto 30px;font-size:.9rem;line-height:1.7;}
+  .footer-divider{border:none;border-top:1px solid rgba(255,255,255,0.1);margin:20px 0;}
+  .footer-copy{font-size:.82rem;color:#7fa3c0;}
+  .success-msg{display:none;text-align:center;padding:30px;background:linear-gradient(135deg,#d4edda,#c3e6cb);border-radius:12px;margin-top:10px;}
+  .success-msg h3{color:#155724;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Red<span>Canje</span>m²</div>
+  <ul>
+    <li><a href="#como">Cómo funciona</a></li>
+    <li><a href="#beneficios">Beneficios</a></li>
+    <li><a href="#ejemplo">Ejemplo</a></li>
+    <li><a href="login.html" class="nav-cta">Unirme</a></li>
+  </ul>
+</nav>
+<section class="hero">
+  <div>
+    <div class="hero-badge">🏗️ Comunidad de Negocios Inmobiliarios</div>
+    <h1>Conectamos <span>Desarrolladores</span><br>con Proveedores</h1>
+    <p>Un ecosistema único donde las desarrolladoras inmobiliarias se financian con m² y los proveedores de materiales potencian su volumen de ventas. Todos ganan.</p>
+    <div class="hero-btns">
+      <a href="login.html" class="btn btn-primary">Soy Desarrollador</a>
+      <a href="login.html" class="btn btn-outline">Soy Proveedor</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">2x</div><div class="stat-label">Más ventas para proveedores</div></div>
+      <div class="stat"><div class="stat-num">0$</div><div class="stat-label">Financiación en efectivo</div></div>
+      <div class="stat"><div class="stat-num">Win-Win</div><div class="stat-label">Ecosistema colaborativo</div></div>
+    </div>
+  </div>
+</section>
+<section class="como" id="como">
+  <div class="container">
+    <div class="section-tag">Proceso simple</div>
+    <h2 class="section-title">¿Cómo funciona<br>Red Canje m²?</h2>
+    <p class="section-sub">En 3 pasos conectamos a los actores del ecosistema para generar negocios reales.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>Te registrás en la Red</h3><p>Como Desarrollador inmobiliario o como Proveedor de materiales y servicios para la construcción.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Conectamos perfiles compatibles</h3><p>La plataforma identifica desarrolladoras que necesitan materiales y proveedores dispuestos a trabajar por canje de m².</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Cerrás el negocio</h3><p>El proveedor entrega materiales o servicios y recibe metros cuadrados como contraprestación.</p></div>
+    </div>
+  </div>
+</section>
+<section id="beneficios">
+  <div class="container">
+    <div class="section-tag">Beneficios</div>
+    <h2 class="section-title">Una propuesta ganadora<br>para ambos lados</h2>
+    <div class="beneficios-grid">
+      <div class="benef-card dev">
+        <h3>🏢 Desarrolladores</h3>
+        <div class="subtitle">Empresas constructoras e inmobiliarias</div>
+        <ul class="benef-list">
+          <li>Financiá tu obra sin usar capital propio en efectivo</li>
+          <li>Accedé a proveedores ya familiarizados con el modelo de canje</li>
+          <li>Reducí el riesgo financiero de cada proyecto</li>
+          <li>Construí una red de socios estratégicos confiables</li>
+          <li>Escalá proyectos sin depender 100% del crédito bancario</li>
+        </ul>
+      </div>
+      <div class="benef-card prov">
+        <h3>🧱 Proveedores</h3>
+        <div class="subtitle">Distribuidores, fabricantes y afines</div>
+        <ul class="benef-list">
+          <li>Aumentá tu volumen de ventas con clientes de gran escala</li>
+          <li>Diversificá tu cartera con activos inmobiliarios reales</li>
+          <li>Ingresá al mercado inmobiliario sin ser desarrollador</li>
+          <li>Generá relaciones comerciales de largo plazo</li>
+          <li>Convertí tus productos en una inversión en ladrillos</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="ejemplo" id="ejemplo">
+  <div class="container">
+    <div class="section-tag">Caso de uso</div>
+    <h2 class="section-title">Un ejemplo concreto</h2>
+    <div class="ejemplo-box">
+      <div class="actor"><div class="actor-icon">🏗️</div><div class="actor-title">Desarrolladora ABC</div><div class="actor-desc">Tiene un proyecto de 20 departamentos. Necesita materiales por $50M pero quiere preservar su capital.</div></div>
+      <div style="text-align:center;"><div class="swap-icon">⇄</div><div class="swap-label">CANJE m²</div></div>
+      <div class="actor"><div class="actor-icon">🧱</div><div class="actor-title">Proveedor XYZ</div><div class="actor-desc">Entrega $50M en materiales y recibe a cambio 2 unidades del proyecto como activo inmobiliario.</div></div>
+    </div>
+  </div>
+</section>
+<section class="porque">
+  <div class="container" style="text-align:center;">
+    <div class="section-tag" style="color:var(--naranja);">¿Por qué unirse?</div>
+    <h2 class="section-title">El mercado está listo.<br>El modelo ya funciona.</h2>
+    <div class="numeros">
+      <div class="numero"><div class="numero-val">+30%</div><div class="numero-label">de las obras en Argentina usan alguna forma de canje</div></div>
+      <div class="numero"><div class="numero-val">2</div><div class="numero-label">tipos de actores conectados en un solo ecosistema</div></div>
+      <div class="numero"><div class="numero-val">100%</div><div class="numero-label">enfocado en el sector construcción e inmobiliario</div></div>
+      <div class="numero"><div class="numero-val">∞</div><div class="numero-label">posibilidades de escalar tu negocio</div></div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-logo">Red<span>Canje</span>m²</div>
+  <p class="footer-desc">Conectando desarrolladoras inmobiliarias con proveedores de materiales para construir juntos un ecosistema de negocios basado en el canje por metros cuadrados.</p>
+  <hr class="footer-divider"/>
+  <p class="footer-copy">© 2025 Red Canje m² — Todos los derechos reservados</p>
+</footer>
+</body>
+</html>

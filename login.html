@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Red Canje m² — Ingresá</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --naranja:#FF6B1A;--naranja2:#FF8C42;--azul:#1A2E4A;--azul2:#0F4C81;
+  --verde:#27AE60;--rojo:#C0392B;--gris:#F4F6FA;--borde:#E2E8F0;--texto:#2D3748;--sub:#718096;
+}
+html,body{height:100%;font-family:'Open Sans',sans-serif;color:var(--texto);}
+body{display:flex;min-height:100vh;overflow:hidden;}
+
+/* PANTALLAS */
+.screen{display:none;width:100%;min-height:100vh;}
+.screen.active{display:flex;}
+
+/* ===================== PANTALLA 1: BIENVENIDA ===================== */
+#s-welcome{background:linear-gradient(135deg,var(--azul) 0%,var(--azul2) 60%,#1a5a8a 100%);align-items:center;justify-content:center;position:relative;overflow:hidden;flex-direction:column;}
+#s-welcome::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M40 40L0 0h80L40 40zm0 0L0 80h80L40 40z'/%3E%3C/g%3E%3C/svg%3E");}
+.welcome-content{text-align:center;z-index:1;padding:40px 20px;}
+.welcome-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:3rem;color:#fff;margin-bottom:8px;}
+.welcome-logo span{color:var(--naranja);}
+.welcome-tagline{color:#b0c4de;font-size:1.05rem;margin-bottom:60px;}
+.welcome-cards{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:50px;}
+.type-card{background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 32px;width:240px;cursor:pointer;transition:.3s;text-align:center;}
+.type-card:hover{background:rgba(255,255,255,0.13);border-color:var(--naranja);transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,0.3);}
+.type-card .tc-icon{font-size:3rem;margin-bottom:16px;}
+.type-card h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.15rem;color:#fff;margin-bottom:8px;}
+.type-card p{color:#9bb5cc;font-size:.85rem;line-height:1.6;}
+.type-card .tc-arrow{margin-top:20px;background:var(--naranja);color:#fff;border:none;border-radius:20px;padding:10px 24px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:.2s;width:100%;}
+.type-card .tc-arrow:hover{background:var(--naranja2);}
+.welcome-login{color:#7fa3c0;font-size:.88rem;}
+.welcome-login a{color:var(--naranja2);cursor:pointer;font-weight:600;text-decoration:none;}
+.welcome-login a:hover{color:var(--naranja);}
+
+/* ===================== PANTALLA 2: FORMULARIO ===================== */
+#s-form{background:var(--gris);flex-direction:row;}
+.form-left{width:420px;flex-shrink:0;background:linear-gradient(160deg,var(--azul) 0%,var(--azul2) 100%);display:flex;flex-direction:column;justify-content:center;padding:60px 48px;position:relative;overflow:hidden;}
+.form-left::after{content:'';position:absolute;bottom:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,0.04);}
+.form-left::before{content:'';position:absolute;top:-40px;left:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,107,26,0.08);}
+.fl-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.6rem;color:#fff;margin-bottom:6px;z-index:1;position:relative;}
+.fl-logo span{color:var(--naranja);}
+.fl-badge{display:inline-block;padding:4px 12px;border-radius:12px;font-size:.75rem;font-weight:700;margin-bottom:36px;z-index:1;position:relative;}
+.fl-badge.dev{background:rgba(15,76,129,0.4);color:#7fb3e0;}
+.fl-badge.prov{background:rgba(192,57,43,0.3);color:#f0a090;}
+.fl-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.8rem;color:#fff;line-height:1.25;margin-bottom:14px;z-index:1;position:relative;}
+.fl-sub{color:#9bb5cc;font-size:.9rem;line-height:1.7;margin-bottom:36px;z-index:1;position:relative;}
+.fl-perks{display:flex;flex-direction:column;gap:12px;z-index:1;position:relative;}
+.perk{display:flex;align-items:center;gap:12px;color:#b0c4de;font-size:.85rem;}
+.perk-icon{width:32px;height:32px;background:rgba(255,107,26,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.form-right{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;overflow-y:auto;}
+.form-box{background:#fff;border-radius:20px;padding:44px 40px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,0.08);}
+.form-box h2{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.4rem;color:var(--azul);margin-bottom:6px;}
+.form-box .form-sub{color:var(--sub);font-size:.88rem;margin-bottom:28px;}
+
+/* TABS login/registro */
+.auth-tabs{display:flex;background:var(--gris);border-radius:12px;padding:4px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:10px;border:none;background:transparent;border-radius:10px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:.3s;color:var(--sub);}
+.auth-tab.active{background:#fff;color:var(--azul);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+
+.fg{margin-bottom:18px;}
+.fg label{display:block;font-size:.8rem;font-weight:700;color:var(--azul);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px;}
+.fg input,.fg select{width:100%;padding:13px 16px;border:2px solid var(--borde);border-radius:10px;font-size:.92rem;font-family:'Open Sans',sans-serif;outline:none;color:var(--texto);transition:.2s;background:#fff;}
+.fg input:focus,.fg select:focus{border-color:var(--naranja);}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.pass-wrap{position:relative;}
+.pass-wrap input{padding-right:44px;}
+.eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--sub);}
+.submit-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--naranja),var(--naranja2));color:#fff;border:none;border-radius:30px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:.3s;margin-top:6px;box-shadow:0 4px 16px rgba(255,107,26,0.25);}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,107,26,0.4);}
+.form-footer{text-align:center;margin-top:18px;font-size:.82rem;color:var(--sub);}
+.form-footer a{color:var(--naranja);cursor:pointer;font-weight:600;}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:#7fa3c0;font-size:.82rem;cursor:pointer;margin-bottom:28px;transition:.2s;}
+.back-link:hover{color:var(--naranja);}
+.divider-or{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--sub);font-size:.8rem;}
+.divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--borde);}
+
+/* ===================== PANTALLA 3: LOADING ===================== */
+#s-loading{background:linear-gradient(135deg,var(--azul),var(--azul2));align-items:center;justify-content:center;flex-direction:column;}
+.loader-logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2rem;color:#fff;margin-bottom:40px;}
+.loader-logo span{color:var(--naranja);}
+.loader-ring{width:60px;height:60px;border:4px solid rgba(255,255,255,0.15);border-top-color:var(--naranja);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 24px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-text{color:#b0c4de;font-size:.9rem;}
+
+/* UTILS */
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+
+<!-- ====== PANTALLA 1: BIENVENIDA / ELEGIR TIPO ====== -->
+<div class="screen active" id="s-welcome">
+  <div class="welcome-content">
+    <div class="welcome-logo">Red<span>Canje</span>m²</div>
+    <div class="welcome-tagline">El ecosistema donde desarrolladores y proveedores construyen juntos</div>
+    <div class="welcome-cards">
+      <div class="type-card" onclick="goForm('dev')">
+        <div class="tc-icon">🏢</div>
+        <h3>Soy Desarrollador</h3>
+        <p>Financiá tus obras con metros cuadrados y conectá con proveedores listos para el canje.</p>
+        <button class="tc-arrow">Ingresar como Desarrollador →</button>
+      </div>
+      <div class="type-card" onclick="goForm('prov')">
+        <div class="tc-icon">🧱</div>
+        <h3>Soy Proveedor</h3>
+        <p>Potenciá tus ventas y convertí tus productos en activos inmobiliarios reales.</p>
+        <button class="tc-arrow">Ingresar como Proveedor →</button>
+      </div>
+    </div>
+    <div class="welcome-login">¿Ya tenés cuenta? <a onclick="goFormLogin()">Iniciá sesión acá</a></div>
+  </div>
+</div>
+
+<!-- ====== PANTALLA 2: FORM LOGIN / REGISTRO ====== -->
+<div class="screen" id="s-form">
+  <div class="form-left" id="form-left">
+    <div class="fl-logo">Red<span>Canje</span>m²</div>
+    <div class="fl-badge dev" id="fl-badge">🏢 Panel Desarrollador</div>
+    <div class="fl-title" id="fl-title">Financiá tus obras sin usar efectivo</div>
+    <div class="fl-sub" id="fl-sub">Conectá con proveedores dispuestos a trabajar por canje de m² y hacé crecer tus proyectos.</div>
+    <div class="fl-perks" id="fl-perks">
+      <div class="perk"><div class="perk-icon">💼</div>Accedé a proyectos activos de la red</div>
+      <div class="perk"><div class="perk-icon">🤝</div>Conectá con proveedores verificados</div>
+      <div class="perk"><div class="perk-icon">📊</div>Gestioná tus acuerdos desde un solo lugar</div>
+    </div>
+  </div>
+  <div class="form-right">
+    <div class="form-box">
+      <span class="back-link" onclick="goWelcome()">← Volver</span>
+      <h2 id="form-title">Crear cuenta</h2>
+      <p class="form-sub" id="form-sub">Completá tus datos para unirte a la Red</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-reg" onclick="setAuthTab('reg')">Registrarme</button>
+        <button class="auth-tab" id="tab-login" onclick="setAuthTab('login')">Iniciar sesión</button>
+      </div>
+
+      <!-- REGISTRO -->
+      <div id="form-registro">
+        <div class="fg-row">
+          <div class="fg"><label>Nombre</label><input type="text" placeholder="Tu nombre"/></div>
+          <div class="fg"><label>Apellido</label><input type="text" placeholder="Tu apellido"/></div>
+        </div>
+        <div class="fg"><label>Empresa</label><input type="text" placeholder="Nombre de tu empresa"/></div>
+        <div class="fg"><label>Email</label><input type="email" placeholder="tu@empresa.com"/></div>
+        <div class="fg"><label>WhatsApp</label><input type="tel" placeholder="+54 9 ..."/></div>
+        <div class="fg" id="fg-rubro">
+          <label id="rubro-lbl">Tipo de desarrollo</label>
+          <select id="sel-rubro">
+            <option value="">Seleccioná una opción</option>
+          </select>
+        </div>
+        <div class="fg"><label>Contraseña</label>
+          <div class="pass-wrap">
+            <input type="password" id="pass1" placeholder="Mínimo 8 caracteres"/>
+            <button class="eye-btn" onclick="togglePass('pass1',this)">👁</button>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="doRegister()">Crear mi cuenta en Red Canje m² →</button>
+        <div class="form-footer">Al registrarte aceptás los <a>Términos y condiciones</a></div>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="form-login" class="hidden">
+        <div class="fg"><label>Email</label><input type="email" placeholder="tu@empresa.com"/></div>
+        <div class="fg"><label>Contraseña</label>
+          <div class="pass-wrap">
+            <input type="password" id="pass2" placeholder="Tu contraseña"/>
+            <button class="eye-btn" onclick="togglePass('pass2',this)">👁</button>
+          </div>
+        </div>
+        <div style="text-align:right;margin-bottom:20px;"><a style="font-size:.82rem;color:var(--naranja);cursor:pointer;font-weight:600;">¿Olvidaste tu contraseña?</a></div>
+        <button class="submit-btn" onclick="doLogin()">Ingresar a mi panel →</button>
+        <div class="divider-or">o</div>
+        <div style="text-align:center;font-size:.85rem;color:var(--sub);">¿No tenés cuenta? <a style="color:var(--naranja);cursor:pointer;font-weight:600;" onclick="setAuthTab('reg')">Registrate gratis</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ====== PANTALLA 3: LOADING ====== -->
+<div class="screen" id="s-loading">
+  <div class="loader-logo">Red<span>Canje</span>m²</div>
+  <div class="loader-ring"></div>
+  <div class="loader-text" id="loader-text">Preparando tu panel...</div>
+</div>
+
+<script>
+let currentType = 'dev';
+
+const config = {
+  dev: {
+    badge: '🏢 Panel Desarrollador',
+    badgeClass: 'dev',
+    title: 'Financiá tus obras sin usar efectivo',
+    sub: 'Conectá con proveedores dispuestos a trabajar por canje de m² y hacé crecer tus proyectos.',
+    perks: ['💼 Accedé a proyectos activos de la red','🤝 Conectá con proveedores verificados','📊 Gestioná tus acuerdos desde un solo lugar'],
+    rubroLabel: 'Tipo de desarrollo',
+    rubros: ['Residencial (casas/PH)','Residencial (edificios)','Comercial / Oficinas','Countries / Barrios privados','Mixto'],
+    loaderText: 'Cargando tu panel de Desarrollador...',
+    panelUrl: 'panel-desarrollador'
+  },
+  prov: {
+    badge: '🧱 Panel Proveedor',
+    badgeClass: 'prov',
+    title: 'Convertí tus productos en activos inmobiliarios',
+    sub: 'Encontrá desarrolladoras que necesitan lo que ofrecés y crecé con el poder del canje por m².',
+    perks: ['🏘️ Accedé a tu cartera de m² en tiempo real','💼 Explorá proyectos que buscan tu rubro','📈 Aumentá tu volumen de ventas sin límites'],
+    rubroLabel: 'Categoría de productos',
+    rubros: ['Materiales de construcción','Aberturas y carpintería','Instalaciones eléctricas/sanitarias','Terminaciones y revestimientos','Maquinaria y equipos','Servicios profesionales','Otro'],
+    loaderText: 'Cargando tu panel de Proveedor...',
+    panelUrl: 'panel-proveedor'
+  }
+};
+
+function goForm(type) {
+  currentType = type;
+  const c = config[type];
+  document.getElementById('fl-badge').textContent = c.badge;
+  document.getElementById('fl-badge').className = 'fl-badge ' + c.badgeClass;
+  document.getElementById('fl-title').textContent = c.title;
+  document.getElementById('fl-sub').textContent = c.sub;
+  document.getElementById('fl-perks').innerHTML = c.perks.map(p =>
+    `<div class="perk"><div class="perk-icon">${p.split(' ')[0]}</div>${p.substring(p.indexOf(' ')+1)}</div>`
+  ).join('');
+  document.getElementById('rubro-lbl').textContent = c.rubroLabel;
+  const sel = document.getElementById('sel-rubro');
+  sel.innerHTML = '<option value="">Seleccioná una opción</option>' +
+    c.rubros.map(r => `<option>${r}</option>`).join('');
+  setAuthTab('reg');
+  showScreen('s-form');
+}
+
+function goFormLogin() {
+  currentType = 'dev';
+  goForm('dev');
+  setAuthTab('login');
+}
+
+function goWelcome() { showScreen('s-welcome'); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setAuthTab(tab) {
+  document.getElementById('tab-reg').classList.toggle('active', tab==='reg');
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('form-registro').classList.toggle('hidden', tab!=='reg');
+  document.getElementById('form-login').classList.toggle('hidden', tab!=='login');
+  document.getElementById('form-title').textContent = tab==='reg' ? 'Crear cuenta' : 'Bienvenido de vuelta';
+  document.getElementById('form-sub').textContent = tab==='reg'
+    ? 'Completá tus datos para unirte a la Red'
+    : 'Ingresá con tu email y contraseña';
+}
+
+function togglePass(id, btn) {
+  const inp = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+
+function doRegister() {
+  const c = config[currentType];
+  document.getElementById('loader-text').textContent = c.loaderText;
+  showScreen('s-loading');
+  setTimeout(() => launchPanel(currentType), 2200);
+}
+
+function doLogin() {
+  document.getElementById('loader-text').textContent = config[currentType].loaderText;
+  showScreen('s-loading');
+  setTimeout(() => launchPanel(currentType), 1800);
+}
+
+function launchPanel(type) {
+  // Simula redirección al panel correspondiente
+  const msg = type === 'dev'
+    ? '✅ ¡Ingresaste como Desarrollador!\n\nEn la versión final, aquí se cargaría el Panel de Desarrollador de Red Canje m².'
+    : '✅ ¡Ingresaste como Proveedor!\n\nEn la versión final, aquí se cargaría el Panel de Proveedor de Red Canje m².';
+  
+  // Mostrar pantalla de bienvenida post-login
+  showScreen('s-loading');
+  document.getElementById('loader-text').textContent = '¡Bienvenido a Red Canje m²!';
+  document.querySelector('.loader-ring').style.borderTopColor = '#27AE60';
+  document.querySelector('.loader-ring').style.animation = 'none';
+  document.querySelector('.loader-ring').style.border = '4px solid #27AE60';
+  document.querySelector('.loader-ring').textContent = '✓';
+  document.querySelector('.loader-ring').style.display = 'flex';
+  document.querySelector('.loader-ring').style.alignItems = 'center';
+  document.querySelector('.loader-ring').style.justifyContent = 'center';
+  document.querySelector('.loader-ring').style.fontSize = '1.8rem';
+  document.querySelector('.loader-ring').style.color = '#fff';
+
+  setTimeout(() => {
+    alert(msg);
+    // Reset para demo
+    document.querySelector('.loader-ring').style.cssText = '';
+    document.querySelector('.loader-ring').textContent = '';
+    goWelcome();
+  }, 1000);
+}
+</script>
+</body>
+</html>
